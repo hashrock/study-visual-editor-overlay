@@ -47,16 +47,6 @@ export default function DebugPanel({ clickedElement }: DebugPanelProps) {
                     </div>
                   </div>
                 )}
-                {clickedElement.computedStyles?.boundingClientRect && (
-                  <div>
-                    <span className="font-medium">Bounding Client Rect:</span>{" "}
-                    <code className="bg-gray-100 px-1 rounded">
-                      {JSON.stringify(
-                        clickedElement.computedStyles.boundingClientRect
-                      )}
-                    </code>
-                  </div>
-                )}
               </div>
             </div>
 

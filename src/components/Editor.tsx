@@ -39,10 +39,10 @@ export default function Editor({ onElementClick }: EditorProps) {
     const importantStyles: Record<string, string | number> = {
       display: computedStyles.display,
       position: computedStyles.position,
-      width: width,
-      height: height,
-      top: top,
-      left: left,
+      width,
+      height,
+      top,
+      left,
     };
 
     const className = getClassName(target);
@@ -64,13 +64,6 @@ export default function Editor({ onElementClick }: EditorProps) {
     <div
       ref={containerRef}
       onClick={handleClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.currentTarget.click();
-        }
-      }}
-      role="application"
-      tabIndex={0}
       className="bg-gray-100 flex-1 h-full overflow-y-auto"
     >
       <div className="relative min-h-full">
@@ -89,16 +82,14 @@ function EditorOverlay({
   if (!overlayElement) return null;
 
   return (
-    <div className="absolute inset-0  pointer-events-none z-10">
-      <div
-        className="absolute bg-red-500 opacity-50 pointer-events-none"
-        style={{
-          width: overlayElement.computedStyles?.width + "px",
-          height: overlayElement.computedStyles?.height + "px",
-          top: overlayElement.computedStyles?.top + "px",
-          left: overlayElement.computedStyles?.left + "px",
-        }}
-      ></div>
-    </div>
+    <div
+      className="absolute bg-red-500/50 pointer-events-none"
+      style={{
+        width: overlayElement.computedStyles?.width + "px",
+        height: overlayElement.computedStyles?.height + "px",
+        top: overlayElement.computedStyles?.top + "px",
+        left: overlayElement.computedStyles?.left + "px",
+      }}
+    />
   );
 }
