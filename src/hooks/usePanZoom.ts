@@ -3,20 +3,15 @@ import { Transform, Vec2 } from "paintvec";
 
 interface UsePanZoomOptions {
   containerRef: RefObject<HTMLDivElement | null>;
-  initialZoom?: number;
-  initialOffset?: Vec2;
-  minZoom?: number;
-  maxZoom?: number;
-  zoomFactor?: number;
+  initialMatrix?: Transform;
+  /** ホイール1回あたりのスケール倍率（デフォルト: 1.1） */
+  scaleFactor?: number;
 }
 
 interface UsePanZoomReturn {
-  zoom: number;
-  offset: Vec2;
   matrix: Transform;
   isDragging: boolean;
-  setZoom: (zoom: number) => void;
-  setOffset: (offset: Vec2) => void;
+  setMatrix: (matrix: Transform) => void;
   handleMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleMouseMove: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleMouseUp: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -31,24 +26,16 @@ interface UsePanZoomReturn {
  */
 export function usePanZoom({
   containerRef,
-  initialZoom = 0.5,
-  initialOffset = new Vec2(0, 0),
-  minZoom = 0.1,
-  maxZoom = 5,
-  zoomFactor = 0.1,
+  initialMatrix = Transform.scale(new Vec2(0.5, 0.5)),
+  scaleFactor = 1.1,
 }: UsePanZoomOptions): UsePanZoomReturn {
-  const [zoom, setZoom] = useState(initialZoom);
-  const [offset, setOffset] = useState(initialOffset);
+  const [matrix, setMatrix] = useState(initialMatrix);
+  const [invertedMatrix, setInvertedMatrix] = useState<Transform | null>(null);
 
   // センタークリックドラッグ用のstate
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState<Vec2 | null>(null);
-  const [offsetStart, setOffsetStart] = useState<Vec2 | null>(null);
-
-  // 変換行列を計算
-  const matrix = Transform.scale(new Vec2(zoom, zoom)).merge(
-    Transform.translate(offset)
-  );
+  const [matrixStart, setMatrixStart] = useState<Transform | null>(null);
 
   // センタークリックでドラッグ開始
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -57,16 +44,19 @@ export function usePanZoom({
       e.preventDefault();
       setIsDragging(true);
       setDragStart(new Vec2(e.clientX, e.clientY));
-      setOffsetStart(offset);
+      setMatrixStart(matrix);
+      setInvertedMatrix(matrix.invert() ?? null);
     }
   };
 
   // ドラッグ中の移動処理
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging && dragStart && offsetStart) {
+    if (isDragging && dragStart && matrixStart) {
       const currentPos = new Vec2(e.clientX, e.clientY);
       const delta = currentPos.sub(dragStart);
-      setOffset(offsetStart.add(delta));
+      // matrixStartにtranslateを追加
+      setMatrix(matrixStart.merge(Transform.translate(delta)));
+      setInvertedMatrix(matrix.invert() ?? null);
     }
   };
 
@@ -75,7 +65,8 @@ export function usePanZoom({
     if (e.button === 1) {
       setIsDragging(false);
       setDragStart(null);
-      setOffsetStart(null);
+      setMatrixStart(null);
+      setInvertedMatrix(null);
     }
   };
 
@@ -83,7 +74,8 @@ export function usePanZoom({
   const handleMouseLeave = () => {
     setIsDragging(false);
     setDragStart(null);
-    setOffsetStart(null);
+    setMatrixStart(null);
+    setInvertedMatrix(null);
   };
 
   // ホイールでズーム（カーソル中心）
@@ -92,35 +84,31 @@ export function usePanZoom({
     const container = containerRef.current;
     if (!container) return;
 
-    // カーソルのコンテナ相対座標
+    // カーソルのコンテナ相対座標（スクリーン座標）
     const rect = container.getBoundingClientRect();
-    const cursorPos = new Vec2(e.clientX - rect.left, e.clientY - rect.top);
+    const screenCursorPos = new Vec2(
+      e.clientX - rect.left,
+      e.clientY - rect.top
+    );
 
-    // カーソル位置のワールド座標（変換前の座標）
-    // スクリーン座標 = ワールド座標 * zoom + offset
-    // → ワールド座標 = (スクリーン座標 - offset) / zoom
-    const worldPos = cursorPos.sub(offset).div(new Vec2(zoom, zoom));
+    // ズームイン/アウトのスケール値
+    const scale = e.deltaY > 0 ? 1 / scaleFactor : scaleFactor;
+    const scaleVec = new Vec2(scale, scale);
 
-    // 新しいズーム値を計算
-    const delta = e.deltaY > 0 ? -zoomFactor : zoomFactor;
-    const newZoom = Math.max(minZoom, Math.min(maxZoom, zoom + delta));
+    // ワールド座標系でカーソル位置を中心にスケール変換を作成
+    // translate(worldCursorPos) → scale → translate(-worldCursorPos)
+    const scaleTransform = Transform.translate(screenCursorPos)
+      .merge(Transform.scale(scaleVec))
+      .merge(Transform.translate(screenCursorPos.neg));
 
-    // カーソル位置を固定するための新しいオフセット
-    // cursorPos = worldPos * newZoom + newOffset
-    // → newOffset = cursorPos - worldPos * newZoom
-    const newOffset = cursorPos.sub(worldPos.mul(new Vec2(newZoom, newZoom)));
-
-    setZoom(newZoom);
-    setOffset(newOffset);
+    // 現在のmatrixにスケール変換を合成（ワールド座標系で適用）
+    setMatrix(matrix.merge(scaleTransform));
   };
 
   return {
-    zoom,
-    offset,
     matrix,
     isDragging,
-    setZoom,
-    setOffset,
+    setMatrix,
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
@@ -128,4 +116,3 @@ export function usePanZoom({
     handleWheel,
   };
 }
-
