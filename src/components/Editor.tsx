@@ -1,12 +1,15 @@
 import ExampleContents from "./ExampleContents";
 import type { ClickedElementInfo } from "../App";
 import { getClassName } from "../utils/dom";
-
+import { useState } from "react";
 interface EditorProps {
   onElementClick: (element: ClickedElementInfo | null) => void;
 }
 
 export default function Editor({ onElementClick }: EditorProps) {
+  const [overlayElement, setOverlayElement] =
+    useState<ClickedElementInfo | null>(null);
+
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     if (!target) return;
@@ -51,6 +54,7 @@ export default function Editor({ onElementClick }: EditorProps) {
       computedStyles: importantStyles,
     };
 
+    setOverlayElement(elementInfo);
     onElementClick(elementInfo);
   };
 
@@ -68,14 +72,31 @@ export default function Editor({ onElementClick }: EditorProps) {
     >
       <div className="relative min-h-full">
         <ExampleContents />
-        <EditorOverlay />
+        <EditorOverlay overlayElement={overlayElement} />
       </div>
     </div>
   );
 }
 
-function EditorOverlay() {
+function EditorOverlay({
+  overlayElement,
+}: {
+  overlayElement: ClickedElementInfo | null;
+}) {
+  if (!overlayElement) return null;
   return (
-    <div className="absolute inset-0 bg-red-500 opacity-50 pointer-events-none"></div>
+    <div className="absolute inset-0  pointer-events-none z-10">
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-red-500 opacity-50 pointer-events-none"
+        style={{
+          width: overlayElement.computedStyles?.width + "px",
+          height: overlayElement.computedStyles?.height + "px",
+          top: overlayElement.computedStyles?.top + "px",
+          left: overlayElement.computedStyles?.left + "px",
+          right: overlayElement.computedStyles?.right + "px",
+          bottom: overlayElement.computedStyles?.bottom + "px",
+        }}
+      ></div>
+    </div>
   );
 }
