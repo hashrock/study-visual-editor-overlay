@@ -43,12 +43,12 @@ export default function Editor({ onElementClick }: EditorProps) {
         {/* ホバー用オーバーレイ（青） */}
         <EditorOverlay
           overlayElement={hoveredElement}
-          className="border-2 border-blue-500/30 absolute pointer-events-none z-10"
+          className="border-2 border-blue-500/30 absolute pointer-events-none z-10 transition-all duration-100"
         />
         {/* クリック確定用オーバーレイ（赤） */}
         <EditorOverlay
           overlayElement={selectedElement}
-          className="bg-red-500/50 absolute pointer-events-none z-10"
+          className="bg-blue-500/10 border-2 border-blue-500/30 absolute pointer-events-none z-10"
         />
       </div>
     </div>
