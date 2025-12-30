@@ -26,7 +26,9 @@ export default function Editor({ onElementClick }: EditorProps) {
     const width = targetRect.width;
     const height = targetRect.height;
 
-    // コンテナからの相対位置を計算（スクロール位置を加算）
+    // 座標系: スクロールコンテナ（containerRef）の左上を原点(0,0)とした座標
+    // - getBoundingClientRect() はビューポート基準なので、コンテナ位置を引く
+    // - スクロール位置を加算することで、スクロール後も正しい位置を維持
     const top = targetRect.top - containerRect.top + container.scrollTop;
     const left = targetRect.left - containerRect.left + container.scrollLeft;
 
@@ -61,11 +63,13 @@ export default function Editor({ onElementClick }: EditorProps) {
   };
 
   return (
+    // スクロールコンテナ: オーバーレイの座標計算の基準となる
     <div
       ref={containerRef}
       onClick={handleClick}
       className="bg-gray-100 flex-1 h-full overflow-y-auto"
     >
+      {/* position:relative のラッパー: オーバーレイの position:absolute の基準点 */}
       <div className="relative min-h-full">
         <ExampleContents />
         <EditorOverlay overlayElement={overlayElement} />
@@ -74,6 +78,10 @@ export default function Editor({ onElementClick }: EditorProps) {
   );
 }
 
+/**
+ * 選択した要素の上に表示するオーバーレイ
+ * 座標系: 親のrelativeラッパーの左上を原点とした絶対位置
+ */
 function EditorOverlay({
   overlayElement,
 }: {
