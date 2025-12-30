@@ -1,5 +1,6 @@
 import ExampleContents from "./ExampleContents";
 import type { ClickedElementInfo } from "../App";
+import { getClassName } from "../utils/dom";
 
 interface EditorProps {
   onElementClick: (element: ClickedElementInfo | null) => void;
@@ -34,9 +35,11 @@ export default function Editor({ onElementClick }: EditorProps) {
       border: computedStyles.border,
     };
 
+    const className = getClassName(target);
+
     const elementInfo: ClickedElementInfo = {
       tagName: target.tagName.toLowerCase(),
-      className: target.className || "",
+      className,
       id: target.id || "",
       textContent: target.textContent?.trim().substring(0, 100) || "",
       attributes,
@@ -49,6 +52,13 @@ export default function Editor({ onElementClick }: EditorProps) {
   return (
     <div
       onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.currentTarget.click();
+        }
+      }}
+      role="application"
+      tabIndex={0}
       className="bg-gray-100 flex-1 h-full overflow-y-auto"
     >
       <ExampleContents />
