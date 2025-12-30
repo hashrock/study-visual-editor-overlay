@@ -66,7 +66,7 @@ export default function Editor({ onElementClick }: EditorProps) {
       tabIndex={0}
       className="bg-gray-100 flex-1 h-full overflow-y-auto"
     >
-      <div className="relative">
+      <div className="relative min-h-full">
         <ExampleContents />
         <EditorOverlay />
       </div>
