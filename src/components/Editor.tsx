@@ -2,6 +2,8 @@ import ExampleContents from "./ExampleContents";
 import type { ClickedElementInfo } from "../App";
 import { useRef } from "react";
 import { useElementSelection } from "../hooks/useElementSelection";
+import { usePanZoom } from "../hooks/usePanZoom";
+import { Vec2 } from "paintvec";
 
 interface EditorProps {
   onElementClick: (element: ClickedElementInfo | null) => void;
@@ -16,30 +18,71 @@ function isClickable(element: ClickedElementInfo | null): boolean {
 
 export default function Editor({ onElementClick }: EditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Pan/Zoom hook
+  const {
+    matrix,
+    isDragging,
+    handleMouseDown: handlePanMouseDown,
+    handleMouseMove: handlePanMouseMove,
+    handleMouseUp: handlePanMouseUp,
+    handleMouseLeave: handlePanMouseLeave,
+    handleWheel,
+  } = usePanZoom({ containerRef });
+
+  // 要素選択 hook
   const {
     selectedElement,
     hoveredElement,
     handleClick,
-    handleMouseMove,
-    handleMouseLeave,
+    handleMouseMove: handleElementMouseMove,
+    handleMouseLeave: handleElementMouseLeave,
   } = useElementSelection({ containerRef, onElementClick });
 
-  const cursorClass = isClickable(hoveredElement)
+  // マウスイベントを統合
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    handlePanMouseDown(e);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    handlePanMouseMove(e);
+    if (!isDragging) {
+      handleElementMouseMove(e);
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    handlePanMouseUp(e);
+  };
+
+  const handleMouseLeave = () => {
+    handlePanMouseLeave();
+    handleElementMouseLeave();
+  };
+
+  const cursorClass = isDragging
+    ? "cursor-grabbing"
+    : isClickable(hoveredElement)
     ? "cursor-pointer"
     : "cursor-default";
-
+  const cssMatrix = matrix.toCSSMatrixString();
   return (
     // スクロールコンテナ: オーバーレイの座標計算の基準となる
     <div
       ref={containerRef}
       onClick={handleClick}
+      onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
-      className={`bg-gray-100 flex-1 h-full overflow-y-auto ${cursorClass}`}
+      onWheel={handleWheel}
+      className={`bg-gray-100 flex-1 h-full overflow-hidden ${cursorClass}`}
     >
       {/* position:relative のラッパー: オーバーレイの position:absolute の基準点 */}
       <div className="relative min-h-full">
-        <ExampleContents />
+        <div style={{ transform: cssMatrix, transformOrigin: "top left" }}>
+          <ExampleContents />
+        </div>
         {/* ホバー用オーバーレイ（青） */}
         <EditorOverlay
           overlayElement={hoveredElement}

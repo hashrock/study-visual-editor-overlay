@@ -15,7 +15,6 @@ export interface ClickedElementInfo {
 function App() {
   const [clickedElement, setClickedElement] =
     useState<ClickedElementInfo | null>(null);
-
   return (
     <>
       <div className="flex h-screen">

@@ -1,7 +1,6 @@
 import { useState, type RefObject } from "react";
 import type { ClickedElementInfo } from "../App";
 import { getElementInfo } from "../utils/dom";
-
 interface UseElementSelectionOptions {
   containerRef: RefObject<HTMLDivElement | null>;
   onElementClick?: (element: ClickedElementInfo | null) => void;
@@ -33,7 +32,6 @@ export function useElementSelection({
     const target = e.target as HTMLElement;
     const container = containerRef.current;
     if (!target || !container) return;
-
     const elementInfo = getElementInfo(target, container);
     setSelectedElement(elementInfo);
     onElementClick?.(elementInfo);
@@ -60,4 +58,3 @@ export function useElementSelection({
     handleMouseLeave,
   };
 }
-

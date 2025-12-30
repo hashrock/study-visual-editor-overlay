@@ -45,6 +45,9 @@ importers:
       globals:
         specifier: ^16.5.0
         version: 16.5.0
+      paintvec:
+        specifier: ^0.7.1
+        version: 0.7.1
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
@@ -1030,6 +1033,9 @@ packages:
   p-locate@5.0.0:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
+
+  paintvec@0.7.1:
+    resolution: {integrity: sha512-B+AAJcWmTxebhAmUH5ZPfix2PNvcN263I0VfN+nhh7z0aAeWV2biBmCd43K7Uz5jkXQoNXb5yRfUifu2ZcSctw==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -2253,6 +2259,8 @@ snapshots:
   p-locate@5.0.0:
     dependencies:
       p-limit: 3.1.0
+
+  paintvec@0.7.1: {}
 
   parent-module@1.0.1:
     dependencies:
