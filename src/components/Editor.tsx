@@ -1,6 +1,6 @@
 import ExampleContents from "./ExampleContents";
 import type { ClickedElementInfo } from "../App";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useElementSelection } from "../hooks/useElementSelection";
 import { usePanZoom } from "../hooks/usePanZoom";
 
@@ -36,7 +36,13 @@ export default function Editor({ onElementClick }: EditorProps) {
     handleClick,
     handleMouseMove: handleElementMouseMove,
     handleMouseLeave: handleElementMouseLeave,
+    recalculatePositions,
   } = useElementSelection({ containerRef, onElementClick });
+
+  // パン/ズーム時にセレクタ位置を再計算
+  useEffect(() => {
+    recalculatePositions();
+  }, [matrix, recalculatePositions]);
 
   // マウスイベントを統合
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -85,7 +91,7 @@ export default function Editor({ onElementClick }: EditorProps) {
         {/* ホバー用オーバーレイ（青） */}
         <EditorOverlay
           overlayElement={hoveredElement}
-          className="border-2 border-blue-500/30 absolute pointer-events-none z-10 transition-all duration-100"
+          className="border-2 border-blue-500/30 absolute pointer-events-none z-10"
         />
         {/* クリック確定用オーバーレイ（赤） */}
         <EditorOverlay

@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { useState, useRef, useCallback, type RefObject } from "react";
 import type { ClickedElementInfo } from "../App";
 import { getElementInfo } from "../utils/dom";
 interface UseElementSelectionOptions {
@@ -12,6 +12,8 @@ interface UseElementSelectionReturn {
   handleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleMouseMove: (e: React.MouseEvent<HTMLDivElement>) => void;
   handleMouseLeave: () => void;
+  /** パン/ズーム時に位置を再計算するための関数 */
+  recalculatePositions: () => void;
 }
 
 /**
@@ -28,11 +30,16 @@ export function useElementSelection({
   const [hoveredElement, setHoveredElement] =
     useState<ClickedElementInfo | null>(null);
 
+  // DOM要素の参照を保持
+  const selectedElementRef = useRef<HTMLElement | null>(null);
+  const hoveredElementRef = useRef<HTMLElement | null>(null);
+
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     const container = containerRef.current;
     if (!target || !container) return;
     const elementInfo = getElementInfo(target, container);
+    selectedElementRef.current = target;
     setSelectedElement(elementInfo);
     onElementClick?.(elementInfo);
   };
@@ -43,12 +50,30 @@ export function useElementSelection({
     if (!target || !container) return;
 
     const elementInfo = getElementInfo(target, container);
+    hoveredElementRef.current = target;
     setHoveredElement(elementInfo);
   };
 
   const handleMouseLeave = () => {
+    hoveredElementRef.current = null;
     setHoveredElement(null);
   };
+
+  // パン/ズーム時に位置を再計算
+  const recalculatePositions = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (selectedElementRef.current) {
+      const elementInfo = getElementInfo(selectedElementRef.current, container);
+      setSelectedElement(elementInfo);
+    }
+
+    if (hoveredElementRef.current) {
+      const elementInfo = getElementInfo(hoveredElementRef.current, container);
+      setHoveredElement(elementInfo);
+    }
+  }, [containerRef]);
 
   return {
     selectedElement,
@@ -56,5 +81,6 @@ export function useElementSelection({
     handleClick,
     handleMouseMove,
     handleMouseLeave,
+    recalculatePositions,
   };
 }
