@@ -97,9 +97,9 @@ export function usePanZoom({
 
     // ワールド座標系でカーソル位置を中心にスケール変換を作成
     // translate(worldCursorPos) → scale → translate(-worldCursorPos)
-    const scaleTransform = Transform.translate(screenCursorPos)
+    const scaleTransform = Transform.translate(screenCursorPos.neg)
       .merge(Transform.scale(scaleVec))
-      .merge(Transform.translate(screenCursorPos.neg));
+      .merge(Transform.translate(screenCursorPos));
 
     // 現在のmatrixにスケール変換を合成（ワールド座標系で適用）
     setMatrix(matrix.merge(scaleTransform));
