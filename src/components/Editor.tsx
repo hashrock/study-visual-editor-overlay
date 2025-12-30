@@ -7,16 +7,19 @@ interface EditorProps {
 }
 
 export default function Editor({ onElementClick }: EditorProps) {
-  const [overlayElement, setOverlayElement] =
+  // クリックで確定した要素
+  const [selectedElement, setSelectedElement] =
+    useState<ClickedElementInfo | null>(null);
+  // ホバー中の要素
+  const [hoveredElement, setHoveredElement] =
     useState<ClickedElementInfo | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    const container = containerRef.current;
-    if (!target || !container) return;
-
-    // クリックした要素の情報を取得
+  // 要素情報を取得する共通関数
+  const getElementInfo = (
+    target: HTMLElement,
+    container: HTMLDivElement
+  ): ClickedElementInfo => {
     const computedStyles = window.getComputedStyle(target);
     const attributes: Record<string, string> = {};
 
@@ -27,17 +30,13 @@ export default function Editor({ onElementClick }: EditorProps) {
     const height = targetRect.height;
 
     // 座標系: スクロールコンテナ（containerRef）の左上を原点(0,0)とした座標
-    // - getBoundingClientRect() はビューポート基準なので、コンテナ位置を引く
-    // - スクロール位置を加算することで、スクロール後も正しい位置を維持
     const top = targetRect.top - containerRect.top + container.scrollTop;
     const left = targetRect.left - containerRect.left + container.scrollLeft;
 
-    // すべての属性を取得
     Array.from(target.attributes).forEach((attr) => {
       attributes[attr.name] = attr.value;
     });
 
-    // 主要なスタイル情報を取得
     const importantStyles: Record<string, string | number> = {
       display: computedStyles.display,
       position: computedStyles.position,
@@ -47,19 +46,37 @@ export default function Editor({ onElementClick }: EditorProps) {
       left,
     };
 
-    const className = getClassName(target);
-
-    const elementInfo: ClickedElementInfo = {
+    return {
       tagName: target.tagName.toLowerCase(),
-      className,
+      className: getClassName(target),
       id: target.id || "",
       textContent: target.textContent?.trim().substring(0, 100) || "",
       attributes,
       computedStyles: importantStyles,
     };
+  };
 
-    setOverlayElement(elementInfo);
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const container = containerRef.current;
+    if (!target || !container) return;
+
+    const elementInfo = getElementInfo(target, container);
+    setSelectedElement(elementInfo);
     onElementClick(elementInfo);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const container = containerRef.current;
+    if (!target || !container) return;
+
+    const elementInfo = getElementInfo(target, container);
+    setHoveredElement(elementInfo);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredElement(null);
   };
 
   return (
@@ -67,12 +84,23 @@ export default function Editor({ onElementClick }: EditorProps) {
     <div
       ref={containerRef}
       onClick={handleClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="bg-gray-100 flex-1 h-full overflow-y-auto"
     >
       {/* position:relative のラッパー: オーバーレイの position:absolute の基準点 */}
       <div className="relative min-h-full">
         <ExampleContents />
-        <EditorOverlay overlayElement={overlayElement} />
+        {/* ホバー用オーバーレイ（青） */}
+        <EditorOverlay
+          overlayElement={hoveredElement}
+          className="bg-blue-500/30"
+        />
+        {/* クリック確定用オーバーレイ（赤） */}
+        <EditorOverlay
+          overlayElement={selectedElement}
+          className="bg-red-500/50"
+        />
       </div>
     </div>
   );
@@ -84,14 +112,16 @@ export default function Editor({ onElementClick }: EditorProps) {
  */
 function EditorOverlay({
   overlayElement,
+  className,
 }: {
   overlayElement: ClickedElementInfo | null;
+  className?: string;
 }) {
   if (!overlayElement) return null;
 
   return (
     <div
-      className="absolute bg-red-500/50 pointer-events-none"
+      className={`absolute pointer-events-none ${className}`}
       style={{
         width: overlayElement.computedStyles?.width + "px",
         height: overlayElement.computedStyles?.height + "px",
