@@ -66,7 +66,16 @@ export default function Editor({ onElementClick }: EditorProps) {
       tabIndex={0}
       className="bg-gray-100 flex-1 h-full overflow-y-auto"
     >
-      <ExampleContents />
+      <div className="relative">
+        <ExampleContents />
+        <EditorOverlay />
+      </div>
     </div>
+  );
+}
+
+function EditorOverlay() {
+  return (
+    <div className="absolute inset-0 bg-red-500 opacity-50 pointer-events-none"></div>
   );
 }
