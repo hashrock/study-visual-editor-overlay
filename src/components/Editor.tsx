@@ -15,6 +15,14 @@ export default function Editor({ onElementClick }: EditorProps) {
     const computedStyles = window.getComputedStyle(target);
     const attributes: Record<string, string> = {};
 
+    const boundingClientRect = target.getBoundingClientRect();
+    const top = boundingClientRect.top;
+    const left = boundingClientRect.left;
+    const right = boundingClientRect.right;
+    const bottom = boundingClientRect.bottom;
+    const width = boundingClientRect.width;
+    const height = boundingClientRect.height;
+
     // すべての属性を取得
     Array.from(target.attributes).forEach((attr) => {
       attributes[attr.name] = attr.value;
@@ -26,13 +34,11 @@ export default function Editor({ onElementClick }: EditorProps) {
       position: computedStyles.position,
       width: computedStyles.width,
       height: computedStyles.height,
-      margin: computedStyles.margin,
-      padding: computedStyles.padding,
-      backgroundColor: computedStyles.backgroundColor,
-      color: computedStyles.color,
-      fontSize: computedStyles.fontSize,
-      fontWeight: computedStyles.fontWeight,
-      border: computedStyles.border,
+      top: computedStyles.top,
+      left: computedStyles.left,
+      right: computedStyles.right,
+      bottom: computedStyles.bottom,
+      boundingClientRect: JSON.stringify(boundingClientRect),
     };
 
     const className = getClassName(target);
