@@ -30,7 +30,6 @@ export function usePanZoom({
   scaleFactor = 1.1,
 }: UsePanZoomOptions): UsePanZoomReturn {
   const [matrix, setMatrix] = useState(initialMatrix);
-  const [invertedMatrix, setInvertedMatrix] = useState<Transform | null>(null);
 
   // センタークリックドラッグ用のstate
   const [isDragging, setIsDragging] = useState(false);
@@ -45,7 +44,6 @@ export function usePanZoom({
       setIsDragging(true);
       setDragStart(new Vec2(e.clientX, e.clientY));
       setMatrixStart(matrix);
-      setInvertedMatrix(matrix.invert() ?? null);
     }
   };
 
@@ -56,7 +54,6 @@ export function usePanZoom({
       const delta = currentPos.sub(dragStart);
       // matrixStartにtranslateを追加
       setMatrix(matrixStart.merge(Transform.translate(delta)));
-      setInvertedMatrix(matrix.invert() ?? null);
     }
   };
 
@@ -66,7 +63,6 @@ export function usePanZoom({
       setIsDragging(false);
       setDragStart(null);
       setMatrixStart(null);
-      setInvertedMatrix(null);
     }
   };
 
@@ -75,7 +71,6 @@ export function usePanZoom({
     setIsDragging(false);
     setDragStart(null);
     setMatrixStart(null);
-    setInvertedMatrix(null);
   };
 
   // ホイールでズーム（カーソル中心）

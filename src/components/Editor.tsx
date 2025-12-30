@@ -3,7 +3,6 @@ import type { ClickedElementInfo } from "../App";
 import { useRef } from "react";
 import { useElementSelection } from "../hooks/useElementSelection";
 import { usePanZoom } from "../hooks/usePanZoom";
-import { Vec2 } from "paintvec";
 
 interface EditorProps {
   onElementClick: (element: ClickedElementInfo | null) => void;

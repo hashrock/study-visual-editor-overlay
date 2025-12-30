@@ -1,7 +1,6 @@
 import { useState } from "react";
-import "./App.css";
 import Editor from "./components/Editor";
-import DebugPanel from "./components/DebugPanel.tsx";
+import DebugPanel from "./components/DebugPanel";
 
 export interface ClickedElementInfo {
   tagName: string;
