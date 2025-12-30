@@ -90,8 +90,6 @@ export function usePanZoom({
     const scale = e.deltaY > 0 ? 1 / scaleFactor : scaleFactor;
     const scaleVec = new Vec2(scale, scale);
 
-    // ワールド座標系でカーソル位置を中心にスケール変換を作成
-    // translate(worldCursorPos) → scale → translate(-worldCursorPos)
     const scaleTransform = Transform.translate(screenCursorPos.neg)
       .merge(Transform.scale(scaleVec))
       .merge(Transform.translate(screenCursorPos));
