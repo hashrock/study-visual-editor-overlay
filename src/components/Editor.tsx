@@ -1,7 +1,7 @@
 import ExampleContents from "./ExampleContents";
 import type { ClickedElementInfo } from "../App";
 import { getClassName } from "../utils/dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 interface EditorProps {
   onElementClick: (element: ClickedElementInfo | null) => void;
 }
@@ -9,22 +9,26 @@ interface EditorProps {
 export default function Editor({ onElementClick }: EditorProps) {
   const [overlayElement, setOverlayElement] =
     useState<ClickedElementInfo | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (!target) return;
+    const container = containerRef.current;
+    if (!target || !container) return;
 
     // クリックした要素の情報を取得
     const computedStyles = window.getComputedStyle(target);
     const attributes: Record<string, string> = {};
 
-    const boundingClientRect = target.getBoundingClientRect();
-    const top = boundingClientRect.top;
-    const left = boundingClientRect.left;
-    const right = boundingClientRect.right;
-    const bottom = boundingClientRect.bottom;
-    const width = boundingClientRect.width;
-    const height = boundingClientRect.height;
+    const targetRect = target.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    const width = targetRect.width;
+    const height = targetRect.height;
+
+    // コンテナからの相対位置を計算（スクロール位置を加算）
+    const top = targetRect.top - containerRect.top + container.scrollTop;
+    const left = targetRect.left - containerRect.left + container.scrollLeft;
 
     // すべての属性を取得
     Array.from(target.attributes).forEach((attr) => {
@@ -39,8 +43,6 @@ export default function Editor({ onElementClick }: EditorProps) {
       height: height,
       top: top,
       left: left,
-      right: right,
-      bottom: bottom,
     };
 
     const className = getClassName(target);
@@ -60,6 +62,7 @@ export default function Editor({ onElementClick }: EditorProps) {
 
   return (
     <div
+      ref={containerRef}
       onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -84,17 +87,16 @@ function EditorOverlay({
   overlayElement: ClickedElementInfo | null;
 }) {
   if (!overlayElement) return null;
+
   return (
     <div className="absolute inset-0  pointer-events-none z-10">
       <div
-        className="absolute top-0 left-0 w-full h-full bg-red-500 opacity-50 pointer-events-none"
+        className="absolute bg-red-500 opacity-50 pointer-events-none"
         style={{
           width: overlayElement.computedStyles?.width + "px",
           height: overlayElement.computedStyles?.height + "px",
           top: overlayElement.computedStyles?.top + "px",
           left: overlayElement.computedStyles?.left + "px",
-          right: overlayElement.computedStyles?.right + "px",
-          bottom: overlayElement.computedStyles?.bottom + "px",
         }}
       ></div>
     </div>
