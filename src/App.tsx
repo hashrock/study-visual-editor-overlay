@@ -9,7 +9,7 @@ export interface ClickedElementInfo {
   id: string;
   textContent: string;
   attributes: Record<string, string>;
-  computedStyles?: Record<string, string>;
+  computedStyles?: Record<string, string | number>;
 }
 
 function App() {

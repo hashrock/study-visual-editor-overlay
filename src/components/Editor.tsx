@@ -29,16 +29,15 @@ export default function Editor({ onElementClick }: EditorProps) {
     });
 
     // 主要なスタイル情報を取得
-    const importantStyles: Record<string, string> = {
+    const importantStyles: Record<string, string | number> = {
       display: computedStyles.display,
       position: computedStyles.position,
-      width: computedStyles.width,
-      height: computedStyles.height,
-      top: computedStyles.top,
-      left: computedStyles.left,
-      right: computedStyles.right,
-      bottom: computedStyles.bottom,
-      boundingClientRect: JSON.stringify(boundingClientRect),
+      width: width,
+      height: height,
+      top: top,
+      left: left,
+      right: right,
+      bottom: bottom,
     };
 
     const className = getClassName(target);
