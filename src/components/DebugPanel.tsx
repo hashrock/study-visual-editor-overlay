@@ -8,8 +8,6 @@ export default function DebugPanel({ clickedElement }: DebugPanelProps) {
   return (
     <div className="w-[300px] bg-gray-200 h-full hidden md:block overflow-y-auto">
       <div className="p-4">
-        <h2 className="text-lg font-bold mb-4">Debug Panel</h2>
-
         {clickedElement ? (
           <div className="space-y-4">
             <div>
