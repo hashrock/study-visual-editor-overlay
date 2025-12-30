@@ -1,10 +1,14 @@
 import "./App.css";
 import Editor from "./components/Editor";
+import DebugPanel from "./components/DebugPanel.tsx";
 
 function App() {
   return (
     <>
-      <Editor />
+      <div className="flex h-screen">
+        <Editor />
+        <DebugPanel />
+      </div>
     </>
   );
 }
