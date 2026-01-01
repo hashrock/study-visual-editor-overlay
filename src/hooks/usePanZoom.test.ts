@@ -82,7 +82,7 @@ describe("usePanZoom", () => {
     });
 
     it("ドラッグ中に移動するとmatrixが更新される", () => {
-      const initialMatrix = Transform.identity;
+      const initialMatrix = new Transform();
       const { result } = renderHook(() =>
         usePanZoom({ containerRef, initialMatrix })
       );
@@ -158,7 +158,7 @@ describe("usePanZoom", () => {
 
   describe("ズーム操作（ホイール）", () => {
     it("ホイール下（deltaY > 0）でズームアウトする", () => {
-      const initialMatrix = Transform.identity;
+      const initialMatrix = new Transform();
       const { result } = renderHook(() =>
         usePanZoom({ containerRef, initialMatrix, scaleFactor: 1.1 })
       );
@@ -179,7 +179,7 @@ describe("usePanZoom", () => {
     });
 
     it("ホイール上（deltaY < 0）でズームインする", () => {
-      const initialMatrix = Transform.identity;
+      const initialMatrix = new Transform();
       const { result } = renderHook(() =>
         usePanZoom({ containerRef, initialMatrix, scaleFactor: 1.1 })
       );
@@ -200,7 +200,7 @@ describe("usePanZoom", () => {
     });
 
     it("カーソル位置を中心にズームされる（スケールと平行移動が連動する）", () => {
-      const initialMatrix = Transform.identity;
+      const initialMatrix = new Transform();
       const scaleFactor = 1.5;
       const { result } = renderHook(() =>
         usePanZoom({ containerRef, initialMatrix, scaleFactor })
@@ -235,7 +235,7 @@ describe("usePanZoom", () => {
 
     it("containerRefがnullの場合はズームしない", () => {
       const nullContainerRef = { current: null };
-      const initialMatrix = Transform.identity;
+      const initialMatrix = new Transform();
       const { result } = renderHook(() =>
         usePanZoom({ containerRef: nullContainerRef, initialMatrix })
       );
