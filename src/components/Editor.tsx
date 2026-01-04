@@ -1,4 +1,5 @@
 import ExampleContents from "./ExampleContents";
+import ComponentPalette from "./ComponentPalette";
 import type { ClickedElementInfo } from "../App";
 import { useRef, useEffect } from "react";
 import { useElementSelection } from "../hooks/useElementSelection";
@@ -86,10 +87,14 @@ export default function Editor({ onElementClick }: EditorProps) {
       {/* position:relative のラッパー: オーバーレイの position:absolute の基準点 */}
       <div className="relative min-h-full" data-editor-ignore>
         <div
-          className="w-[1200px]"
+          className="flex items-start p-8"
+          data-editor-ignore
           style={{ transform: cssMatrix, transformOrigin: "top left" }}
         >
-          <ExampleContents />
+          <div className="w-[1200px] flex-shrink-0">
+            <ExampleContents />
+          </div>
+          <ComponentPalette />
         </div>
         {/* ホバー用オーバーレイ（青） */}
         <EditorOverlay
