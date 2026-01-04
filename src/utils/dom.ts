@@ -1,4 +1,4 @@
-import type { ClickedElementInfo } from "../App";
+import type { ClickedElementInfo, ElementAncestor, DOMTreeNode } from "../App";
 
 /**
  * 要素のclassNameを文字列として取得する
@@ -61,6 +61,25 @@ export function getElementInfo(
     left,
   };
 
+  // 親要素のパスを取得（containerまで）
+  const ancestors: ElementAncestor[] = [];
+  let current = target.parentElement;
+  while (current && current !== container) {
+    const currentRect = current.getBoundingClientRect();
+    ancestors.push({
+      tagName: current.tagName.toLowerCase(),
+      className: getClassName(current),
+      id: current.id || "",
+      computedStyles: {
+        width: currentRect.width,
+        height: currentRect.height,
+        top: currentRect.top - containerRect.top + container.scrollTop,
+        left: currentRect.left - containerRect.left + container.scrollLeft,
+      },
+    });
+    current = current.parentElement;
+  }
+
   return {
     tagName: target.tagName.toLowerCase(),
     className: getClassName(target),
@@ -68,5 +87,50 @@ export function getElementInfo(
     textContent: target.textContent?.trim().substring(0, 100) || "",
     attributes,
     computedStyles: importantStyles,
+    ancestors,
   };
+}
+
+/**
+ * DOMツリーを構築する
+ * @param root ルート要素
+ * @param container スクロールコンテナ（座標計算の基準）
+ * @param maxDepth 最大深さ（デフォルト: 10）
+ */
+export function buildDOMTree(
+  root: HTMLElement,
+  container: HTMLDivElement,
+  maxDepth: number = 10
+): DOMTreeNode {
+  const containerRect = container.getBoundingClientRect();
+
+  function buildNode(element: HTMLElement, depth: number): DOMTreeNode {
+    const rect = element.getBoundingClientRect();
+
+    const children: DOMTreeNode[] = [];
+    if (depth < maxDepth) {
+      for (const child of Array.from(element.children)) {
+        if (child instanceof HTMLElement) {
+          // data-editor-ignoreを持つ要素はスキップ
+          if (child.hasAttribute("data-editor-ignore")) continue;
+          children.push(buildNode(child, depth + 1));
+        }
+      }
+    }
+
+    return {
+      tagName: element.tagName.toLowerCase(),
+      className: getClassName(element),
+      id: element.id || "",
+      children,
+      computedStyles: {
+        width: rect.width,
+        height: rect.height,
+        top: rect.top - containerRect.top + container.scrollTop,
+        left: rect.left - containerRect.left + container.scrollLeft,
+      },
+    };
+  }
+
+  return buildNode(root, 0);
 }

@@ -1,12 +1,14 @@
 import ExampleContents from "./ExampleContents";
 import ComponentPalette from "./ComponentPalette";
-import type { ClickedElementInfo } from "../App";
+import type { ClickedElementInfo, DOMTreeNode } from "../App";
 import { useRef, useEffect } from "react";
 import { useElementSelection } from "../hooks/useElementSelection";
 import { usePanZoom } from "../hooks/usePanZoom";
+import { buildDOMTree } from "../utils/dom";
 
 interface EditorProps {
   onElementClick: (element: ClickedElementInfo | null) => void;
+  onTreeChange: (tree: DOMTreeNode | null) => void;
 }
 
 // クリック可能な要素かどうかを判定
@@ -16,8 +18,9 @@ function isClickable(element: ClickedElementInfo | null): boolean {
   return CLICKABLE_TAGS.includes(element.tagName);
 }
 
-export default function Editor({ onElementClick }: EditorProps) {
+export default function Editor({ onElementClick, onTreeChange }: EditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Pan/Zoom hook
   const {
@@ -44,6 +47,14 @@ export default function Editor({ onElementClick }: EditorProps) {
   useEffect(() => {
     recalculatePositions();
   }, [matrix, recalculatePositions]);
+
+  // DOMツリーを構築して通知
+  useEffect(() => {
+    if (contentRef.current && containerRef.current) {
+      const tree = buildDOMTree(contentRef.current, containerRef.current);
+      onTreeChange(tree);
+    }
+  }, [onTreeChange]);
 
   // マウスイベントを統合
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -87,8 +98,8 @@ export default function Editor({ onElementClick }: EditorProps) {
       {/* position:relative のラッパー: オーバーレイの position:absolute の基準点 */}
       <div className="relative min-h-full" data-editor-ignore>
         <div
+          ref={contentRef}
           className="flex items-start p-8"
-          data-editor-ignore
           style={{ transform: cssMatrix, transformOrigin: "top left" }}
         >
           <div className="w-[1200px] flex-shrink-0 shadow">
