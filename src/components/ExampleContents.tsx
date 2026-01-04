@@ -1,3 +1,5 @@
+import { Button, Card, CheckListItem } from "./ui";
+
 export default function ExampleContents() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -14,12 +16,8 @@ export default function ExampleContents() {
             優れたデザインで、成功への道をサポートします。
           </p>
           <div className="flex gap-4 justify-center">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-              今すぐ始める
-            </button>
-            <button className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition-colors">
-              詳細を見る
-            </button>
+            <Button variant="primary">今すぐ始める</Button>
+            <Button variant="outline">詳細を見る</Button>
           </div>
         </div>
       </section>
@@ -31,7 +29,7 @@ export default function ExampleContents() {
             主な特徴
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-shadow">
+            <Card variant="default">
               <div className="w-12 h-12 bg-blue-600 rounded-lg mb-4 flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
@@ -54,8 +52,8 @@ export default function ExampleContents() {
                 最新のテクノロジーを使用して、驚くほど高速なパフォーマンスを実現。
                 あなたのワークフローを効率化します。
               </p>
-            </div>
-            <div className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-shadow">
+            </Card>
+            <Card variant="default">
               <div className="w-12 h-12 bg-green-600 rounded-lg mb-4 flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
@@ -78,8 +76,8 @@ export default function ExampleContents() {
                 企業レベルのセキュリティで、あなたのデータを保護。
                 安心してご利用いただけます。
               </p>
-            </div>
-            <div className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-shadow">
+            </Card>
+            <Card variant="default">
               <div className="w-12 h-12 bg-purple-600 rounded-lg mb-4 flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
@@ -102,7 +100,7 @@ export default function ExampleContents() {
                 あなたのニーズに合わせて自由にカスタマイズ可能。
                 柔軟な設定で最適な環境を構築できます。
               </p>
-            </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -123,72 +121,10 @@ export default function ExampleContents() {
                 作業効率を大幅に向上させます。
               </p>
               <ul className="space-y-4">
-                <li className="flex items-start">
-                  <svg
-                    className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">リアルタイム同期機能</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">
-                    包括的な分析ダッシュボード
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">24/7サポート体制</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">モバイルアプリ対応</span>
-                </li>
+                <CheckListItem>リアルタイム同期機能</CheckListItem>
+                <CheckListItem>包括的な分析ダッシュボード</CheckListItem>
+                <CheckListItem>24/7サポート体制</CheckListItem>
+                <CheckListItem>モバイルアプリ対応</CheckListItem>
               </ul>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-lg">
@@ -229,7 +165,7 @@ export default function ExampleContents() {
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             {/* ベーシックプラン */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl p-8 hover:border-blue-500 transition-colors">
+            <Card variant="outlined">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 ベーシック
               </h3>
@@ -238,62 +174,17 @@ export default function ExampleContents() {
                 <span className="text-gray-600">/月</span>
               </div>
               <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">基本的な機能</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">5プロジェクトまで</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">メールサポート</span>
-                </li>
+                <CheckListItem iconSize="sm">基本的な機能</CheckListItem>
+                <CheckListItem iconSize="sm">5プロジェクトまで</CheckListItem>
+                <CheckListItem iconSize="sm">メールサポート</CheckListItem>
               </ul>
-              <button className="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition-colors">
+              <Button variant="outline" fullWidth>
                 選択する
-              </button>
-            </div>
+              </Button>
+            </Card>
 
             {/* プロプラン */}
-            <div className="bg-blue-600 border-2 border-blue-600 rounded-xl p-8 transform scale-105 shadow-xl">
+            <Card variant="highlighted" hover={false}>
               <div className="bg-yellow-400 text-yellow-900 text-sm font-bold px-3 py-1 rounded-full inline-block mb-4">
                 人気
               </div>
@@ -303,78 +194,26 @@ export default function ExampleContents() {
                 <span className="text-blue-200">/月</span>
               </div>
               <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-white mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-white">全機能へのアクセス</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-white mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-white">無制限のプロジェクト</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-white mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-white">優先サポート</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-white mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-white">高度な分析ツール</span>
-                </li>
+                <CheckListItem variant="light" iconSize="sm">
+                  全機能へのアクセス
+                </CheckListItem>
+                <CheckListItem variant="light" iconSize="sm">
+                  無制限のプロジェクト
+                </CheckListItem>
+                <CheckListItem variant="light" iconSize="sm">
+                  優先サポート
+                </CheckListItem>
+                <CheckListItem variant="light" iconSize="sm">
+                  高度な分析ツール
+                </CheckListItem>
               </ul>
-              <button className="w-full bg-white text-blue-600 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <Button variant="white" fullWidth>
                 選択する
-              </button>
-            </div>
+              </Button>
+            </Card>
 
             {/* エンタープライズプラン */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl p-8 hover:border-blue-500 transition-colors">
+            <Card variant="outlined">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 エンタープライズ
               </h3>
@@ -385,77 +224,17 @@ export default function ExampleContents() {
                 <span className="text-gray-600">/月</span>
               </div>
               <ul className="space-y-4 mb-8">
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">カスタム機能開発</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">
-                    専任アカウントマネージャー
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">24/7専用サポート</span>
-                </li>
-                <li className="flex items-start">
-                  <svg
-                    className="w-5 h-5 text-green-600 mr-3 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-gray-700">SLA保証</span>
-                </li>
+                <CheckListItem iconSize="sm">カスタム機能開発</CheckListItem>
+                <CheckListItem iconSize="sm">
+                  専任アカウントマネージャー
+                </CheckListItem>
+                <CheckListItem iconSize="sm">24/7専用サポート</CheckListItem>
+                <CheckListItem iconSize="sm">SLA保証</CheckListItem>
               </ul>
-              <button className="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition-colors">
+              <Button variant="outline" fullWidth>
                 お問い合わせ
-              </button>
-            </div>
+              </Button>
+            </Card>
           </div>
         </div>
       </section>
@@ -470,9 +249,9 @@ export default function ExampleContents() {
             無料トライアルで、すべての機能を14日間お試しいただけます。
             クレジットカードは不要です。
           </p>
-          <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+          <Button variant="white" size="lg">
             無料で始める
-          </button>
+          </Button>
         </div>
       </section>
     </div>
