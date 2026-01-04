@@ -6,7 +6,7 @@ interface DebugPanelProps {
 
 export default function DebugPanel({ clickedElement }: DebugPanelProps) {
   return (
-    <div className="w-[300px] bg-gray-200 h-full hidden md:block overflow-y-auto">
+    <div className="w-[300px] bg-gray-50 h-full hidden md:block overflow-y-auto">
       <div className="p-4">
         {clickedElement ? (
           <div className="space-y-4">
@@ -62,7 +62,7 @@ export default function DebugPanel({ clickedElement }: DebugPanelProps) {
                           {value}
                         </code>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </div>
@@ -82,7 +82,7 @@ export default function DebugPanel({ clickedElement }: DebugPanelProps) {
                           {value}
                         </code>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </div>

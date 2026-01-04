@@ -82,7 +82,7 @@ export default function Editor({ onElementClick }: EditorProps) {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
       onWheel={handleWheel}
-      className={`bg-gray-100 flex-1 h-full overflow-hidden ${cursorClass}`}
+      className={`bg-gray-300 flex-1 h-full overflow-hidden ${cursorClass}`}
     >
       {/* position:relative のラッパー: オーバーレイの position:absolute の基準点 */}
       <div className="relative min-h-full" data-editor-ignore>
@@ -91,7 +91,7 @@ export default function Editor({ onElementClick }: EditorProps) {
           data-editor-ignore
           style={{ transform: cssMatrix, transformOrigin: "top left" }}
         >
-          <div className="w-[1200px] flex-shrink-0">
+          <div className="w-[1200px] flex-shrink-0 shadow">
             <ExampleContents />
           </div>
           <ComponentPalette />
