@@ -68,8 +68,8 @@ export default function Editor({ onElementClick }: EditorProps) {
   const cursorClass = isDragging
     ? "cursor-grabbing"
     : isClickable(hoveredElement)
-    ? "cursor-pointer"
-    : "cursor-default";
+      ? "cursor-pointer"
+      : "cursor-default";
   const cssMatrix = matrix.toCSSMatrixString();
   return (
     // スクロールコンテナ: オーバーレイの座標計算の基準となる
@@ -84,8 +84,11 @@ export default function Editor({ onElementClick }: EditorProps) {
       className={`bg-gray-100 flex-1 h-full overflow-hidden ${cursorClass}`}
     >
       {/* position:relative のラッパー: オーバーレイの position:absolute の基準点 */}
-      <div className="relative min-h-full">
-        <div style={{ transform: cssMatrix, transformOrigin: "top left" }}>
+      <div className="relative min-h-full" data-editor-ignore>
+        <div
+          className="w-[1200px]"
+          style={{ transform: cssMatrix, transformOrigin: "top left" }}
+        >
           <ExampleContents />
         </div>
         {/* ホバー用オーバーレイ（青） */}

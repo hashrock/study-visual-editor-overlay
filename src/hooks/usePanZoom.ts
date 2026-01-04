@@ -104,7 +104,6 @@ export function usePanZoom({
 
   // ホイールでズーム（カーソル中心）
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    e.preventDefault();
     const container = containerRef.current;
     if (!container) return;
 
@@ -112,7 +111,7 @@ export function usePanZoom({
     const rect = container.getBoundingClientRect();
     const screenCursorPos = new Vec2(
       e.clientX - rect.left, // ビューポートX - コンテナ左端
-      e.clientY - rect.top // ビューポートY - コンテナ上端
+      e.clientY - rect.top, // ビューポートY - コンテナ上端
     );
 
     // ズームイン/アウトのスケール値

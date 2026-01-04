@@ -38,6 +38,8 @@ export function useElementSelection({
     const target = e.target as HTMLElement;
     const container = containerRef.current;
     if (!target || !container) return;
+    // エディタのUI要素は選択対象から除外
+    if (target.hasAttribute("data-editor-ignore")) return;
     const elementInfo = getElementInfo(target, container);
     selectedElementRef.current = target;
     setSelectedElement(elementInfo);
@@ -48,6 +50,8 @@ export function useElementSelection({
     const target = e.target as HTMLElement;
     const container = containerRef.current;
     if (!target || !container) return;
+    // エディタのUI要素は選択対象から除外
+    if (target.hasAttribute("data-editor-ignore")) return;
 
     const elementInfo = getElementInfo(target, container);
     hoveredElementRef.current = target;
